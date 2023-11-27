@@ -66,3 +66,17 @@ resource "docker_container" "worker_container" {
     name = docker_network.back_network.name
   }
 }
+
+# Seed Container
+resource "docker_container" "seed_container" {
+  name  = "seed-data"
+  image = docker_image.seed_app.image_id
+
+  networks_advanced {
+    name = docker_network.front_network.name
+  }
+
+  labels = {
+    "com.docker.compose.profile" = "seed"
+  }
+}

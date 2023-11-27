@@ -31,3 +31,11 @@ resource "docker_image" "worker_app" {
     context = "./worker"
   }
 }
+
+# Seed Application Image
+resource "docker_image" "seed_app" {
+  name = "seed_app"
+  build {
+    context = "./seed-data"
+  }
+}
