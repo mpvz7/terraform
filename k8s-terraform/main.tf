@@ -30,7 +30,7 @@ provider "google" {
   project     = var.project_id
   region      = var.region
   zone        = var.zone
-  credentials = file("eval-terraform-ef799185e155.json")
+  credentials = file(var.credentials)
 }
 
 data "google_client_config" "default" {}
