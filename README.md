@@ -1,65 +1,73 @@
-# Example Voting App
+Certainly! Here's a sample README file for the Terraform repository located at `https://github.com/mpvz7/terraform/tree/main`. This README provides a general overview, prerequisites, installation instructions, usage examples, and contributing guidelines.
 
-A simple distributed application running across multiple Docker containers.
+---
 
-## Getting started
+# Terraform and Kubernetes
 
-Download [Docker Desktop](https://www.docker.com/products/docker-desktop) for Mac or Windows. [Docker Compose](https://docs.docker.com/compose) will be automatically installed. On Linux, make sure you have the latest version of [Compose](https://docs.docker.com/compose/install/).
+## Overview
+Welcome to our Terraform Modules Repository. This repository contains Terraform setting that are designed to help you create and manage your infrastructure with ease. Our modules are tailored for Kubernetes deployments and services, offering an efficient way to manage various components such as PostgreSQL, Redis, and other services in a Kubernetes cluster.
 
-This solution uses Python, Node.js, .NET, with Redis for messaging and Postgres for storage.
+## Improvement
+In the branch `partie2b` you can have an overview of the deployement's module with variables, it wasn't pushed because it wasn't tested.
 
-Run in this directory to build and run the app:
+## Installation
 
-```shell
-docker compose up
+### Clone the Repository
+To get started, clone this repository to your local machine:
+
+```bash
+git clone https://github.com/mpvz7/terraform.git
+cd terraform
 ```
 
-The `vote` app will be running at [http://localhost:5000](http://localhost:5000), and the `results` will be at [http://localhost:5001](http://localhost:5001).
+### Configuration
+To configure terraform with you gcp account:
 
-Alternately, if you want to run it on a [Docker Swarm](https://docs.docker.com/engine/swarm/), first make sure you have a swarm. If you don't, run:
+- Modify the project_id, and creditencials in the `k8s-terraform/terraform.tfvars`
+- Modify the ports if needed in `k8s-terraform/modules/deployment-module/main.tf` and `k8s-terraform/modules/service-module/main.tf` 
 
-```shell
-docker swarm init
+### Initialize Terraform
+Navigate to the desired module directory and initialize Terraform:
+
+```bash
+terraform init
 ```
 
-Once you have your swarm, in this directory run:
+## Usage
 
-```shell
-docker stack deploy --compose-file docker-stack.yml vote
+### Deploying a Module
+To deploy a module, navigate to the module's directory and apply the Terraform configuration:
+
+```bash
+terraform apply
 ```
 
-## Run the app in Kubernetes
+### Destroying Infrastructure
+To remove the deployed infrastructure, run:
 
-The folder k8s-specifications contains the YAML specifications of the Voting App's services.
-
-Run the following command to create the deployments and services. Note it will create these resources in your current namespace (`default` if you haven't changed it.)
-
-```shell
-kubectl create -f k8s-specifications/
+```bash
+terraform destroy
 ```
 
-The `vote` web app is then available on port 31000 on each host of the cluster, the `result` web app is available on port 31001.
+## Modules
+This repository includes the following modules:
+- **Kubernetes Deployment**: Helps in deploying applications on Kubernetes.
+- **Kubernetes Service**: Facilitates the creation of services in Kubernetes.
 
-To remove them, run:
+## Contributing
+We welcome contributions to this repository! If you would like to contribute, please follow these steps:
 
-```shell
-kubectl delete -f k8s-specifications/
-```
+1. Fork the repository.
+2. Create a new branch for your feature or bug fix.
+3. Make your changes and test them.
+4. Submit a pull request with a clear description of your changes.
 
-## Architecture
+## Support
+For support and queries, please open an issue in the GitHub issue tracker.
 
-![Architecture diagram](architecture.excalidraw.png)
+## License
+This project is licensed under the [MIT License](LICENSE).
 
-* A front-end web app in [Python](/vote) which lets you vote between two options
-* A [Redis](https://hub.docker.com/_/redis/) which collects new votes
-* A [.NET](/worker/) worker which consumes votes and stores them in…
-* A [Postgres](https://hub.docker.com/_/postgres/) database backed by a Docker volume
-* A [Node.js](/result) web app which shows the results of the voting in real time
+---
 
-## Notes
-
-The voting application only accepts one vote per client browser. It does not register additional votes if a vote has already been submitted from a client.
-
-This isn't an example of a properly architected perfectly designed distributed app... it's just a simple
-example of the various types of pieces and languages you might see (queues, persistent data, etc), and how to
-deal with them in Docker at a basic level.
+Feel free to adjust the content as per the actual structure and policies of your repository. The README should be placed in the root directory of the repository.
