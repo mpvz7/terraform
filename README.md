@@ -1,7 +1,3 @@
-Certainly! Here's a sample README file for the Terraform repository located at `https://github.com/mpvz7/terraform/tree/main`. This README provides a general overview, prerequisites, installation instructions, usage examples, and contributing guidelines.
-
----
-
 # Terraform and Kubernetes
 
 ## Overview
