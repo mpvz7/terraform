@@ -1,72 +1,96 @@
-variable "metada_name" {
-  type = string
+variable "deployment_name" {
+  description = "The name of the deployment"
+  type        = string
 }
 
-variable "metadata_label_app" {
-  type = string
-}
-
-variable "replica" {
-  type = number
-}
-
-variable "selector_label_app" {
-  type = string
-}
-
-variable "template_metadata_app" {
-  type = string
+variable "app_label" {
+  description = "Label to assign to the app"
+  type        = string
 }
 
 variable "container_name" {
-  type = string
+  description = "Name of the container"
+  type        = string
 }
 
-variable "container_image" {
-  type = string
+variable "image" {
+  description = "Container image"
+  type        = string
 }
 
 variable "container_port" {
-  type = number
+  description = "Container port"
+  type        = number
+  default = null
 }
 
-variable "port_name" {
-  type = number
+variable "env_vars" {
+  description = "List of environment variables"
+  type        = list(map(string))
+  default     = []
 }
 
+variable "volume_name" {
+  description = "Name of the volume"
+  type        = string
+  default     = ""
+}
 
-resource "kubernetes_deployment" "deployment_app" {
+variable "mount_path" {
+  description = "Path to mount the volume"
+  type        = string
+  default     = ""
+}
+
+resource "kubernetes_deployment" "app" {
   metadata {
-    name = var.metada_name
+    name   = var.deployment_name
     labels = {
-      app = var.metadata_label_app
+      app = var.app_label
     }
   }
 
   spec {
-    replicas = var.replica
+    replicas = 1
     selector {
       match_labels = {
-        app = var.selector_label_app
+        app = var.app_label
       }
     }
 
     template {
       metadata {
         labels = {
-          app = var.template_metadata_app
+          app = var.app_label
         }
       }
 
       spec {
         container {
           name  = var.container_name
-          image = var.container_image
+          image = var.image
+
+          dynamic "env" {
+            for_each = var.env_vars
+            content {
+              name  = env.value["name"]
+              value = env.value["value"]
+            }
+          }
 
           port {
             container_port = var.container_port
-            name = var.port_name
           }
+
+          volume_mount {
+            mount_path = var.mount_path
+            name       = var.volume_name
+          }
+        }
+
+        volume {
+          name = var.volume_name
+          empty_dir {}
         }
       }
     }

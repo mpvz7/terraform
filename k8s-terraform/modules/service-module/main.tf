@@ -1,55 +1,91 @@
-variable "metadata_name" {
-  type = string
-}
-
-variable "metadata_label_app" {
-  type = string
-}
-
-variable "selector_app" {
-  type = string
-}
-
-variable "port_name" {
-  type = string
-}
-
-variable "port_number" {
-  type = number
-}
-
-variable "target_port" {
-  type = number
-}
-
-variable "node_port" {
-  type = number
-}
- 
-variable "type" {
-  type = string
-}
-
-resource "kubernetes_service" "services_app" {
+resource "kubernetes_service" "postgres" {
   metadata {
-    name = var.metadata_name
+    name = "postgres"
     labels = {
-      app = var.metadata_label_app
+      app = "postgres"
     }
   }
 
   spec {
     selector = {
-      app = var.selector_app
+      app = "postgres"
     }
 
     port {
-      port        = var.port
-      target_port = var.target_port
-      name        = var.port_name
-      node_port   = var.node_port
+      port        = 5432
+      target_port = 5432
     }
 
-    type = var.type
+    type = "ClusterIP"
+  }
+}
+
+resource "kubernetes_service" "redis" {
+  metadata {
+    name   = "redis"
+    labels = {
+        app = "redis"
+    }
+  }
+
+  spec {
+    selector = {
+        app = "redis"
+    }
+
+    port {
+        name        = "redis-service"
+        port        = 6379
+        target_port = 6379
+    }
+
+    type = "ClusterIP"
+  }
+}
+
+resource "kubernetes_service" "result" {
+  metadata {
+    name = "result"
+    labels = {
+      app = "result"
+    }
+  }
+
+  spec {
+    selector = {
+      app = "result"
+    }
+
+    port {
+      port        = 5001
+      target_port = 80
+      node_port = 31001
+    }
+
+    type = "NodePort"
+  }
+}
+
+resource "kubernetes_service" "vote" {
+  metadata {
+    name = "vote"
+    labels = {
+      app = "vote"
+    }
+  }
+
+  spec {
+    selector = {
+      app = "vote"
+    }
+
+    port {
+      name        = "vote-service"
+      port        = 5000
+      target_port = 80
+      node_port   = 31000
+    }
+
+    type = "NodePort"
   }
 }
