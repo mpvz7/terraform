@@ -9,3 +9,7 @@ variable "region" {
 variable "zone" {
   description = "zone"
 }
+
+variable "credentials" { 
+  description = "credentials"
+}
